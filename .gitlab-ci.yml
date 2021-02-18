@@ -37,15 +37,15 @@ default:
 
 install_modules:
   stage: install
-  image: node:12-alpine
+  # image: node:12-alpine
   # tags:
   #   - docker
   script:
-    - yarn install
+    - npm install
 
     # Compile angular dependencies for ivy before next step
     # So only this step has to push the cache
-    - yarn ngcc --properties es2015 --create-ivy-entry-points
+    # - yarn ngcc --properties es2015 --create-ivy-entry-points
 
   # Redefine cache to have default pull-push policy
   extends: .dependencies_cache
@@ -53,7 +53,7 @@ install_modules:
     policy: pull-push
   only:
     changes:
-      - yarn.lock
+      - package-lock.lock
 
 
 # build:
