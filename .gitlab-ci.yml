@@ -29,7 +29,7 @@ default:
     policy: pull
 
 
-install_dependencies:
+install:
   stage: install
   # tags:
   #   - docker
@@ -49,39 +49,39 @@ install_dependencies:
       - yarn.lock
 
 
-build:
-  stage: build
-  # tags:
-  #   - docker
-  script:
-    - yarn build
-  after_script:
-    # - mv $PROJECT_PATH/nginx.conf $PROJECT_PATH/default.conf
-    # - cp $PROJECT_PATH/default.conf  $APP_OUTPUT_PATH
-    - cp $PROJECT_PATH/Dockerfile    $APP_OUTPUT_PATH
-  artifacts:
-    name: "angular-app-pipeline"
-    paths:
-      - $APP_OUTPUT_PATH
-  extends: .dependencies_cache
+# build:
+#   stage: build
+#   # tags:
+#   #   - docker
+#   script:
+#     - yarn build
+#   after_script:
+#     # - mv $PROJECT_PATH/nginx.conf $PROJECT_PATH/default.conf
+#     # - cp $PROJECT_PATH/default.conf  $APP_OUTPUT_PATH
+#     - cp $PROJECT_PATH/Dockerfile    $APP_OUTPUT_PATH
+#   artifacts:
+#     name: "angular-app-pipeline"
+#     paths:
+#       - $APP_OUTPUT_PATH
+#   extends: .dependencies_cache
 
 
-publish:
-  stage: publish
-  # tags:
-  #   - shell
-  before_script:
-    - ls Dockerfile | xargs sed -i "s/CI_PROJECT_NAME/$CI_PROJECT_NAME/g"
-  script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_BRANCH .
-    - docker push  $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_BRANCH
-  dependencies:
-    - build
-  only:
-    - master
-    - develop
-    - tags
+# publish:
+#   stage: publish
+#   # tags:
+#   #   - shell
+#   before_script:
+#     - ls Dockerfile | xargs sed -i "s/CI_PROJECT_NAME/$CI_PROJECT_NAME/g"
+#   script:
+#     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+#     - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_BRANCH .
+#     - docker push  $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_BRANCH
+#   dependencies:
+#     - build
+#   only:
+#     - master
+#     - develop
+#     - tags
 
 
 # homolog:
