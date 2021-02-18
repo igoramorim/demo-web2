@@ -39,19 +39,19 @@ variables:
     policy: pull
 
 
-install_modules:
-  stage: install
-  image: node:12-alpine
-  script:
-    - npm install
+# install_modules:
+#   stage: install
+#   image: node:12-alpine
+#   script:
+#     - npm install
 
-  # Redefine cache to have default pull-push policy
-  extends: .dependencies_cache
-  cache:
-    policy: pull-push
-  only:
-    changes:
-      - package-lock.lock
+#   # Redefine cache to have default pull-push policy
+#   extends: .dependencies_cache
+#   cache:
+#     policy: pull-push
+#   only:
+#     changes:
+#       - package-lock.lock
 
 
 docker-build:
@@ -68,23 +68,23 @@ docker-build:
     - develop
 
 
-# homolog:
-#   stage: deploy
-#   dependencies:
-#     - build
-#   variables:
-#     CLUSTER: ocpvh1
-#   environment:
-#     name: homolog
-#     kubernetes:
-#       namespace: ${KUBE_NAMESPACE}
-#   before_script:
-#     - oc login --server=https://api.${CLUSTER}.cea.com.br:6443 --token=${OCP_TOKEN_HOM} --insecure-skip-tls-verify
-#     - chmod +x ./deploy.sh  
-#   script:
-#     - ./deploy.sh ${CI_COMMIT_BRANCH}
-#   only:
-#     - develop
+homolog:
+  stage: deploy
+  dependencies:
+    - build
+  variables:
+    CLUSTER: ocpvh1
+  environment:
+    name: homolog
+    kubernetes:
+      namespace: ${KUBE_NAMESPACE}
+  before_script:
+    - oc login --server=https://api.${CLUSTER}.cea.com.br:6443 --token=${OCP_TOKEN_HOM} --insecure-skip-tls-verify
+    # - chmod +x ./deploy.sh
+  script:
+    - ./deploy.sh ${CI_COMMIT_BRANCH}
+  only:
+    - develop
 
 
 # homolog:
