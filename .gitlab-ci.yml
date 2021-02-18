@@ -29,10 +29,6 @@ variables:
   # IS_RELEASE_PIPELINE: "$CI_COMMIT_TAG"
 
 
-default:
-  image: node:12-alpine
-
-
 .dependencies_cache:
   cache:
     key:
@@ -45,7 +41,7 @@ default:
 
 install_modules:
   stage: install
-  # image: node:12-alpine
+  image: node:12-alpine
   script:
     - npm install
 
