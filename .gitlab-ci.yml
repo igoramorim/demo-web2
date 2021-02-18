@@ -53,11 +53,11 @@ install_modules:
 build:
   stage: build
   script:
-    - yarn build
+    - npm run build
   after_script:
     # - mv $PROJECT_PATH/nginx.conf $PROJECT_PATH/default.conf
     # - cp $PROJECT_PATH/default.conf  $APP_OUTPUT_PATH
-    - cp $PROJECT_PATH/Dockerfile    $APP_OUTPUT_PATH
+    # - cp $PROJECT_PATH/Dockerfile    $APP_OUTPUT_PATH
   artifacts:
     name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
     paths:
