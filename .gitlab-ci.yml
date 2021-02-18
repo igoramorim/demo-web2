@@ -1,13 +1,110 @@
 
 stages: 
-  - check-node
-  - test 
-  - build 
-  - build_container 
-  - deploy 
+  - install
+  - build
+  - publish
+  - deploy
 
-job_1:
-  stage: check-node
+
+variables:
+  # PROJECT_PATH: "$CI_PROJECT_DIR"
+  OUTPUT_PATH: "$CI_PROJECT_DIR/artifacts"
+  APP_OUTPUT_PATH: "$CI_PROJECT_DIR/artifacts/app"
+  # DOCKER_IMAGE_NAME: "$CI_REGISTRY_IMAGE/app"
+  # DOCKER_IMAGE_TAG: "$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA"
+  # IS_RELEASE_PIPELINE: "$CI_COMMIT_TAG"
+
+
+default:
   image: node:12-alpine
+
+
+.dependencies_cache:
+  cache:
+    key:
+      files:
+        - yarn.lock
+    paths:
+      - node_modules
+    policy: pull
+
+
+install_dependencies:
+  stage: install
+  # tags:
+  #   - docker
   script:
-    - node --version
+    - yarn install
+
+    # Compile angular dependencies for ivy before next step
+    # So only this step has to push the cache
+    - yarn ngcc --properties es2015 --create-ivy-entry-points
+
+  # Redefine cache to have default pull-push policy
+  extends: .dependencies_cache
+  cache:
+    policy: pull-push
+  only:
+    changes:
+      - yarn.lock
+
+
+build:
+  stage: build
+  # tags:
+  #   - docker
+  script:
+    - yarn build
+  after_script:
+    # - mv $PROJECT_PATH/nginx.conf $PROJECT_PATH/default.conf
+    # - cp $PROJECT_PATH/default.conf  $APP_OUTPUT_PATH
+    - cp $PROJECT_PATH/Dockerfile    $APP_OUTPUT_PATH
+  artifacts:
+    name: "angular-app-pipeline"
+    paths:
+      - $APP_OUTPUT_PATH
+  extends: .dependencies_cache
+
+
+publish:
+  stage: publish
+  # tags:
+  #   - shell
+  before_script:
+    - ls Dockerfile | xargs sed -i "s/CI_PROJECT_NAME/$CI_PROJECT_NAME/g"
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_BRANCH .
+    - docker push  $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_BRANCH
+  dependencies:
+    - build
+  only:
+    - master
+    - develop
+    - tags
+
+
+# homolog:
+#   stage: deploy
+#   dependencies:
+#     - build
+#   variables:
+#     CLUSTER: ocpvh1
+#   environment:
+#     name: homolog
+#     kubernetes:
+#       namespace: ${KUBE_NAMESPACE}
+#   before_script:
+#     - oc login --server=https://api.${CLUSTER}.cea.com.br:6443 --token=${OCP_TOKEN_HOM} --insecure-skip-tls-verify
+#     - chmod +x ./deploy.sh  
+#   script:
+#     - ./deploy.sh ${CI_COMMIT_BRANCH}
+#   only:
+#     - develop
+
+
+# job_1:
+#   stage: check-node
+#   image: node:12-alpine
+#   script:
+#     - node --version
