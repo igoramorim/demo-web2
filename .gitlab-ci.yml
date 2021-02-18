@@ -7,6 +7,12 @@ stages:
 
 
 variables:
+  OPENSHIFT_PROJECT: "cea-${CI_PROJECT_NAMESPACE}"
+  GIT_SSL_NO_VERIFY: "1"
+  #https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+  DOCKER_HOST: tcp://dind:2375
+  # This will instruct Docker not to start over TLS.
+  DOCKER_TLS_CERTDIR: ""  
   # PROJECT_PATH: "$CI_PROJECT_DIR"
   OUTPUT_PATH: "$CI_PROJECT_DIR/artifacts"
   APP_OUTPUT_PATH: "$CI_PROJECT_DIR/artifacts/app"
@@ -29,8 +35,9 @@ default:
     policy: pull
 
 
-install:
+install_modules:
   stage: install
+  image: node:12-alpine
   # tags:
   #   - docker
   script:
