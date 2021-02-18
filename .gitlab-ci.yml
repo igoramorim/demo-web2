@@ -3,6 +3,7 @@ stages:
   - install
   - build
   - publish
+  - build_container
   - deploy
 
 
@@ -50,21 +51,18 @@ install_modules:
       - package-lock.lock
 
 
-homolog:
-  stage: build
+docker-build:
+  stage: build_container
+  before_script:
+    # - ls Dockerfile | xargs sed -i "s/CI_PROJECT_NAME/$CI_PROJECT_NAME/g"
   script:
-    - npm run build:homolog
-  # after_script:
-    # - mv $PROJECT_PATH/nginx.conf $PROJECT_PATH/default.conf
-    # - cp $PROJECT_PATH/default.conf  $APP_OUTPUT_PATH
-    # - cp $PROJECT_PATH/Dockerfile    $APP_OUTPUT_PATH
-  artifacts:
-    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
-    # paths:
-    #   - $APP_OUTPUT_PATH
-  extends: .dependencies_cache
+    - env
+    - echo $CI_COMMIT_BRANCH
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_BRANCH .
+    - docker push  $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_BRANCH
   only:
-    - develop/
+    - develop
 
 
 # homolog:
@@ -84,6 +82,24 @@ homolog:
 #     - ./deploy.sh ${CI_COMMIT_BRANCH}
 #   only:
 #     - develop
+
+
+# homolog:
+#   stage: build
+#   script:
+#     - npm run build:homolog
+#   # after_script:
+#     # - mv $PROJECT_PATH/nginx.conf $PROJECT_PATH/default.conf
+#     # - cp $PROJECT_PATH/default.conf  $APP_OUTPUT_PATH
+#     # - cp $PROJECT_PATH/Dockerfile    $APP_OUTPUT_PATH
+#   artifacts:
+#     name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+#     # paths:
+#     #   - $APP_OUTPUT_PATH
+#   extends: .dependencies_cache
+#   only:
+#     - develop/
+
 
 # publish:
 #   stage: publish
