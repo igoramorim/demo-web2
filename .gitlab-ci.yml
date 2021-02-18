@@ -1,7 +1,13 @@
+
+stages: 
+  - check-node
+  - test 
+  - build 
+  - build_container 
+  - deploy 
+
 job_1:
-  stage: stage_a
+  stage: check-node
   image: node:12-alpine
-  tags:
-    - docker
   script:
     - node --version
