@@ -71,7 +71,7 @@ docker-build:
 homolog:
   stage: deploy
   dependencies:
-    - build
+    - build_container
   variables:
     CLUSTER: ocpvh1
   environment:
