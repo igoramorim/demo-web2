@@ -57,7 +57,7 @@ install_modules:
 docker-build:
   stage: build_container
   before_script:
-    # - ls Dockerfile | xargs sed -i "s/CI_PROJECT_NAME/$CI_PROJECT_NAME/g"
+    - ls Dockerfile | xargs sed -i "s/ENVIRONMENT/homolog/g"
   script:
     - env
     - echo $CI_COMMIT_BRANCH

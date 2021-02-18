@@ -1,6 +1,6 @@
 FROM node:lts-alpine3.13 as node
 
-ARG env=production
+ARG env=ENVIRONMENT
 
 WORKDIR /app
 COPY package.json /app/
