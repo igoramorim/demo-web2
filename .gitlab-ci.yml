@@ -38,14 +38,8 @@ default:
 install_modules:
   stage: install
   # image: node:12-alpine
-  # tags:
-  #   - docker
   script:
     - npm install
-
-    # Compile angular dependencies for ivy before next step
-    # So only this step has to push the cache
-    # - yarn ngcc --properties es2015 --create-ivy-entry-points
 
   # Redefine cache to have default pull-push policy
   extends: .dependencies_cache
@@ -56,21 +50,19 @@ install_modules:
       - package-lock.lock
 
 
-# build:
-#   stage: build
-#   # tags:
-#   #   - docker
-#   script:
-#     - yarn build
-#   after_script:
-#     # - mv $PROJECT_PATH/nginx.conf $PROJECT_PATH/default.conf
-#     # - cp $PROJECT_PATH/default.conf  $APP_OUTPUT_PATH
-#     - cp $PROJECT_PATH/Dockerfile    $APP_OUTPUT_PATH
-#   artifacts:
-#     name: "angular-app-pipeline"
-#     paths:
-#       - $APP_OUTPUT_PATH
-#   extends: .dependencies_cache
+build:
+  stage: build
+  script:
+    - yarn build
+  after_script:
+    # - mv $PROJECT_PATH/nginx.conf $PROJECT_PATH/default.conf
+    # - cp $PROJECT_PATH/default.conf  $APP_OUTPUT_PATH
+    - cp $PROJECT_PATH/Dockerfile    $APP_OUTPUT_PATH
+  artifacts:
+    name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
+    paths:
+      - $APP_OUTPUT_PATH
+  extends: .dependencies_cache
 
 
 # publish:
