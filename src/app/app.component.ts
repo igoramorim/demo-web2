@@ -8,11 +8,41 @@ import { MyServiceService } from './my-service.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
   title = 'demo-web2';
   url = environment.URL_DATA;
   data = '';
 
-  constructor(private service: MyServiceService) {}
+  cities: any[];
+  selectedCity: any = {name: 'New York', code: 'NY'};
+
+  selectedState: any = null;
+    
+  states: any[] = [
+      {name: 'Arizona', code: 'Arizona'},
+      {name: 'California', value: 'California'},
+      {name: 'Florida', code: 'Florida'},
+      {name: 'Ohio', code: 'Ohio'},
+      {name: 'Washington', code: 'Washington'}
+  ];
+
+  cities1: any[] = [];
+  
+  cities2: any[] = [];
+  
+  city1:any = null;
+
+  city2:any = null;
+
+  constructor(private service: MyServiceService) {
+    this.cities = [
+      {name: 'New York', code: 'NY'},
+      {name: 'Rome', code: 'RM'},
+      {name: 'London', code: 'LDN'},
+      {name: 'Istanbul', code: 'IST'},
+      {name: 'Paris', code: 'PRS'}
+  ];
+  }
 
   ngOnInit() {
     this.buscar();
