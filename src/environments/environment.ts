@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  URL_DATA: 'https://swapi.dev/api/films/1/'
+  URL_DATA: 'https://api.chucknorris.io/jokes/random'
 };
 
 /*
