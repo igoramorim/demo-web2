@@ -5,7 +5,7 @@ ARG env=ENVIRONMENT
 WORKDIR /app
 COPY package.json /app/
 RUN npm i npm@latest -g
-RUN npm install
+RUN npm install --force
 COPY ./ /app/
 
 RUN npm run build:${env}
