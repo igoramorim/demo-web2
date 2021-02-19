@@ -82,7 +82,7 @@ production:
   when: manual
   before_script:
     - oc login --server=https://api.${CLUSTER}.cea.com.br:6443 --token=${OCP_TOKEN_PRD} --insecure-skip-tls-verify  
-    # - chmod +x ./deploy.sh
+    - chmod +x ./deploy.sh
   script:
     - ./deploy.sh ${CI_BUILD_TAG}
   only:
