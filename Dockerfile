@@ -10,5 +10,5 @@ COPY ./ /app/
 
 RUN npm run build:${env}
 
-FROM nginx:alpine
+FROM nginxinc/nginx-unprivileged
 COPY --from=node /app/dist/demo-web2 /usr/share/nginx/html
