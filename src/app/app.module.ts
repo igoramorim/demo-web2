@@ -5,20 +5,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
-// material
-import { MatSliderModule } from '@angular/material/slider';
-
-// primeng
-import { DropdownModule } from 'primeng/dropdown';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { CheckboxModule } from 'primeng/checkbox';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-
 // project
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CoreModule } from 'src/app/core/core.module';
 
 @NgModule({
   declarations: [
@@ -30,13 +20,7 @@ import { AppComponent } from './app.component';
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
-    MatSliderModule,
-    DropdownModule,
-    ButtonModule,
-    InputTextModule,
-    CheckboxModule,
-    RadioButtonModule,
-    InputTextareaModule
+    CoreModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
