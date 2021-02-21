@@ -10,10 +10,12 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 // import { SecurityHttpInterceptor } from 'src/app/core/interceptors/security-http.interceptor';
 // import { ConfirmDialogComponent } from './modal/confirm-dialog/confirm-dialog.component';
 import { SharedModule } from '../shared.module';
+import { MainComponent } from './main/main.component';
 
 @NgModule({
   declarations: [
     // UnauthorizedComponent,
+    MainComponent
   ],
   entryComponents: [
 
@@ -23,7 +25,7 @@ import { SharedModule } from '../shared.module';
     SharedModule
   ],
   exports: [
-
+    MainComponent
   ],
   providers: [
   //   MensageriaService,
